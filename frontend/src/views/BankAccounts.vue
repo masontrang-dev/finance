@@ -23,6 +23,12 @@
             >
               Bank Accounts
             </router-link>
+            <router-link
+              to="/deposits"
+              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900"
+            >
+              Future Deposits
+            </router-link>
           </div>
           <div class="flex items-center">
             <span class="text-sm text-gray-700 mr-4">{{ authStore.currentUser?.name }}</span>

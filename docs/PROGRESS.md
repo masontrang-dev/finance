@@ -1136,6 +1136,228 @@ Ready to proceed to **Story 2.4: Future Deposits Tracking**:
 
 ---
 
+### ✅ Story 2.4: Future Deposits Tracking
+
+**Status**: Completed  
+**Completed Date**: November 9, 2025  
+**Estimated Effort**: 4-5 hours  
+**Actual Effort**: ~4 hours
+
+#### Acceptance Criteria
+
+- [x] Create deposit recording endpoint
+- [x] Create deposit history endpoint
+- [x] Implement deposit model with fields: amount, deposit_date, description
+- [x] Create DepositForm.vue component
+- [x] Create DepositList.vue component
+- [x] Display upcoming deposits
+- [x] Filter deposits by date range
+
+#### What Was Implemented
+
+**Backend API:**
+- **Validator** (`src/validators/depositValidator.js`):
+  - Create deposit schema with Joi validation
+  - Update deposit schema for partial updates
+  - Amount must be positive number
+  - Deposit date required and must be valid date
+  - Description optional with 500 character limit
+  - Reusable validation middleware
+
+- **Controller** (`src/controllers/depositController.js`):
+  - `GET /api/deposits` - Get all deposits for authenticated user
+  - `GET /api/deposits/:id` - Get single deposit
+  - `POST /api/deposits` - Create new deposit
+  - `PUT /api/deposits/:id` - Update deposit
+  - `DELETE /api/deposits/:id` - Delete deposit
+  - Deposits sorted by date (earliest first)
+  - User ownership validation for all operations
+  - Proper error handling with appropriate status codes
+
+- **Routes** (`src/routes/depositRoutes.js`):
+  - All routes protected with authentication middleware
+  - Validation middleware applied to create/update operations
+  - RESTful route structure
+
+- **Server Integration**:
+  - Deposit routes mounted at `/api/deposits`
+  - Integrated with existing Express server
+
+**Frontend Components:**
+- **Service** (`src/services/depositService.js`):
+  - API wrapper for all deposit operations
+  - Centralized HTTP calls using Axios
+
+- **Store** (`src/stores/depositStore.js`):
+  - Pinia store for deposit state management
+  - State: deposits array, currentDeposit, loading, error
+  - Actions: fetchDeposits, fetchDeposit, createDeposit, updateDeposit, deleteDeposit
+  - Getters:
+    - sortedDeposits - Deposits sorted by date (earliest first)
+    - upcomingDeposits - Future deposits (including today)
+    - pastDeposits - Past deposits
+    - totalAmount - Sum of all deposit amounts
+    - upcomingAmount - Sum of upcoming deposit amounts
+    - pastAmount - Sum of past deposit amounts
+    - depositCount - Total number of deposits
+    - upcomingCount - Number of upcoming deposits
+
+- **Deposits View** (`src/views/Deposits.vue`):
+  - Clean, modern UI with TailwindCSS
+  - Navigation bar with links to all main sections
+  - Summary cards showing:
+    - Total number of deposits
+    - Upcoming deposits amount and count
+    - Total amount across all deposits
+  - Deposits table with:
+    - Deposit date (formatted)
+    - Amount (currency formatted)
+    - Description
+    - Status badge (Upcoming/Past)
+    - Edit and delete buttons
+    - Sorted by date (earliest first)
+  - Empty state with call-to-action
+  - Error message display
+  - Loading states
+  - Delete confirmation modal
+
+- **DepositForm Component** (`src/components/DepositForm.vue`):
+  - Modal form for creating/editing deposits
+  - Fields:
+    - Amount (currency input with $ prefix)
+    - Deposit date (date picker)
+    - Description (optional, 500 char limit with counter)
+  - Client-side validation:
+    - Required field validation
+    - Positive amount validation
+    - Date required
+  - Server-side validation error display
+  - Loading states during submission
+  - Cancel button to close modal
+  - Character counter for description field
+
+- **Router Integration**:
+  - Added `/deposits` route with authentication requirement
+  - Lazy-loaded component for better performance
+
+- **Navigation Updates**:
+  - Updated Dashboard navigation bar with Future Deposits link
+  - Updated CreditCards view with navigation bar
+  - Updated BankAccounts view with navigation bar
+  - Active state highlighting for current route
+  - Consistent navigation across all views
+
+#### Key Files Created
+
+**Backend:**
+```
+backend/src/
+├── validators/
+│   └── depositValidator.js        # Input validation schemas
+├── controllers/
+│   └── depositController.js       # CRUD operations
+├── routes/
+│   └── depositRoutes.js           # Route definitions
+└── server.js                      # Updated with deposit routes
+```
+
+**Frontend:**
+```
+frontend/src/
+├── services/
+│   └── depositService.js          # API service
+├── stores/
+│   └── depositStore.js            # State management
+├── views/
+│   ├── Deposits.vue               # Main deposits page
+│   ├── Dashboard.vue              # Updated with navigation
+│   ├── CreditCards.vue            # Updated with navigation
+│   └── BankAccounts.vue           # Updated with navigation
+├── components/
+│   └── DepositForm.vue            # Add/edit form modal
+└── router/
+    └── index.js                   # Updated with deposits route
+```
+
+#### Features Implemented
+
+**Data Management:**
+- Full CRUD operations for deposits
+- User-specific data isolation
+- Cascade delete support (via Prisma schema)
+- Automatic date-based filtering
+
+**Validation:**
+- Server-side validation with Joi
+- Client-side validation for better UX
+- Amount must be positive
+- Description character limit enforcement
+- Detailed error messages
+
+**UI/UX:**
+- Responsive design with TailwindCSS
+- Summary statistics at the top
+- Visual status badges for upcoming vs past deposits
+- Confirmation dialog for destructive actions
+- Loading states for async operations
+- Error handling with user-friendly messages
+- Empty state with helpful call-to-action
+- Currency formatting throughout
+- Date formatting with date-fns
+- Character counter for description field
+
+**Security:**
+- All endpoints require authentication
+- User ownership verification on all operations
+- Input sanitization via validation
+- SQL injection prevention via Prisma ORM
+
+#### Testing the Implementation
+
+**Manual Testing Steps:**
+1. Start backend: `cd backend && npm start`
+2. Start frontend: `cd frontend && npm run dev`
+3. Log in with test credentials
+4. Navigate to "Future Deposits" page from navigation
+5. View existing deposits from seed data
+6. Click "Add Deposit" to create new deposit
+7. Fill in form and submit
+8. Edit an existing deposit
+9. Delete a deposit (with confirmation)
+10. Verify summary statistics update correctly
+11. Test navigation between all views
+
+**Test Data (from seed):**
+- Paycheck: $3,500.00 on Dec 15, 2024
+- Bonus: $2,000.00 on Dec 31, 2024
+
+#### Next Steps
+
+Ready to proceed to **Story 2.5: Cashflow Summary Dashboard**:
+- Create cashflow summary endpoint
+- Calculate total available cash (bank balances + future deposits)
+- Calculate total obligations (credit card current balances)
+- Calculate cashflow surplus/deficit
+- Create CashflowSummary.vue component
+- Display summary with visual indicators (green/red)
+- Show breakdown by credit card and bank account
+- Add month selector
+
+#### Notes
+
+- Deposit model already existed in Prisma schema
+- All monetary values displayed with 2 decimal places
+- Deposits sorted by date (earliest first) by default
+- Status badges automatically update based on current date
+- Store includes helpful getters for filtering and calculations
+- Navigation is consistent across all views with active state highlighting
+- Form validates in real-time on client side
+- Character counter helps users stay within description limit
+- Date filtering uses date-fns for accurate comparisons
+- Upcoming deposits include today's date
+
+---
+
 ## Story Status Summary
 
 | Epic | Story | Status | Completed Date |
@@ -1146,7 +1368,8 @@ Ready to proceed to **Story 2.4: Future Deposits Tracking**:
 | Epic 2 | Story 2.1: Credit Card Management | ✅ Complete | Nov 9, 2025 |
 | Epic 2 | Story 2.2: Credit Card Payment Tracking | ✅ Complete | Nov 9, 2025 |
 | Epic 2 | Story 2.3: Bank Account Management | ✅ Complete | Nov 9, 2025 |
-| Epic 2 | Story 2.4: Future Deposits Tracking | 🔄 Next | - |
+| Epic 2 | Story 2.4: Future Deposits Tracking | ✅ Complete | Nov 9, 2025 |
+| Epic 2 | Story 2.5: Cashflow Summary Dashboard | 🔄 Next | - |
 
 ---
 

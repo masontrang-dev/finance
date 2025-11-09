@@ -152,21 +152,22 @@ A Vue.js and Node.js application for tracking credit cards, bank accounts, inves
 
 ---
 
-#### Story 2.4: Future Deposits Tracking
+#### Story 2.4: Future Deposits Tracking ✅
 **As a** user  
 **I want** to record future deposits  
 **So that** I can plan my cashflow
 
 **Acceptance Criteria:**
-- [ ] Create deposit recording endpoint
-- [ ] Create deposit history endpoint
-- [ ] Implement deposit model with fields: amount, deposit_date, description
-- [ ] Create DepositForm.vue component
-- [ ] Create DepositList.vue component
-- [ ] Display upcoming deposits
-- [ ] Filter deposits by date range
+- [x] Create deposit recording endpoint
+- [x] Create deposit history endpoint
+- [x] Implement deposit model with fields: amount, deposit_date, description
+- [x] Create DepositForm.vue component
+- [x] Create DepositList.vue component
+- [x] Display upcoming deposits
+- [x] Filter deposits by date range
 
 **Estimated Effort:** 4-5 hours
+**Status:** Complete
 
 ---
 

@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 import creditCardRoutes from './routes/creditCardRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import bankAccountRoutes from './routes/bankAccountRoutes.js';
+import depositRoutes from './routes/depositRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -41,6 +42,9 @@ app.use('/api', paymentRoutes);
 
 // Bank account routes
 app.use('/api/bank-accounts', bankAccountRoutes);
+
+// Deposit routes
+app.use('/api/deposits', depositRoutes);
 
 // 404 handler
 app.use((req, res) => {
