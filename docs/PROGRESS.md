@@ -724,6 +724,218 @@ Ready to proceed to **Story 2.2: Credit Card Payment Tracking**:
 
 ---
 
+### ✅ Story 2.2: Credit Card Payment Tracking
+
+**Status**: Completed  
+**Completed Date**: November 9, 2025  
+**Estimated Effort**: 4-5 hours  
+**Actual Effort**: ~4.5 hours
+
+#### Acceptance Criteria
+
+- [x] Create payment recording endpoint
+- [x] Create payment history endpoint
+- [x] Implement payment model with fields: amount, payment_date, notes
+- [x] Update credit card balance after payment
+- [x] Create PaymentForm.vue component
+- [x] Create PaymentHistory.vue component
+- [x] Display payment history in a table
+- [x] Calculate remaining balance after payments
+
+#### What Was Implemented
+
+**Backend API:**
+- **Validator** (`src/validators/paymentValidator.js`):
+  - Payment creation schema with Joi validation
+  - Amount must be positive number
+  - Payment date required and must be valid date
+  - Notes optional with 500 character limit
+  - Reusable validation middleware
+
+- **Controller** (`src/controllers/paymentController.js`):
+  - `GET /api/credit-cards/:creditCardId/payments` - Get all payments for a credit card
+  - `POST /api/credit-cards/:creditCardId/payments` - Create new payment
+  - `DELETE /api/payments/:id` - Delete a payment
+  - Payment amount validation (cannot exceed current balance)
+  - Automatic balance updates using database transactions
+  - User ownership verification for all operations
+  - Payments sorted by date (newest first)
+
+- **Routes** (`src/routes/paymentRoutes.js`):
+  - All routes protected with authentication middleware
+  - Validation middleware applied to payment creation
+  - RESTful route structure
+
+- **Server Integration**:
+  - Payment routes mounted at `/api`
+  - Integrated with existing Express server
+
+**Frontend Components:**
+- **Service** (`src/services/paymentService.js`):
+  - API wrapper for all payment operations
+  - Centralized HTTP calls using Axios
+
+- **Store** (`src/stores/paymentStore.js`):
+  - Pinia store for payment state management
+  - State: payments array, loading, error
+  - Actions: fetchPayments, createPayment, deletePayment, clearPayments
+  - Getters:
+    - sortedPayments - Payments sorted by date (newest first)
+    - totalPaid - Sum of all payment amounts
+
+- **PaymentForm Component** (`src/components/PaymentForm.vue`):
+  - Modal form for recording payments
+  - Fields:
+    - Credit card name (read-only display)
+    - Current balance (read-only display)
+    - Payment amount (with validation)
+    - Payment date (date picker)
+    - Notes (optional, 500 char limit)
+  - Real-time remaining balance preview
+  - Client-side validation:
+    - Payment cannot exceed current balance
+    - Amount must be positive
+    - Date required
+  - Server-side validation error display
+  - Loading states during submission
+  - Auto-updates credit card balance after payment
+
+- **PaymentHistory Component** (`src/components/PaymentHistory.vue`):
+  - Modal displaying payment history
+  - Summary statistics:
+    - Total number of payments
+    - Total amount paid
+    - Current balance
+  - Payment table with:
+    - Payment date (formatted)
+    - Payment amount (currency formatted)
+    - Notes
+    - Delete button for each payment
+  - Delete confirmation dialog
+  - Empty state with helpful message
+  - Loading states
+  - Auto-refreshes credit card data after deletion
+
+- **CreditCards View Integration**:
+  - Added "Pay" button for each credit card
+  - Added "History" button for each credit card
+  - Payment modals integrated into view
+  - Auto-refresh credit card list after payment operations
+  - Seamless user experience
+
+#### Key Files Created
+
+**Backend:**
+```
+backend/src/
+├── validators/
+│   └── paymentValidator.js       # Payment validation schemas
+├── controllers/
+│   └── paymentController.js      # Payment CRUD operations
+├── routes/
+│   └── paymentRoutes.js          # Payment route definitions
+└── server.js                     # Updated with payment routes
+```
+
+**Frontend:**
+```
+frontend/src/
+├── services/
+│   └── paymentService.js         # Payment API service
+├── stores/
+│   └── paymentStore.js           # Payment state management
+├── components/
+│   ├── PaymentForm.vue           # Payment recording modal
+│   └── PaymentHistory.vue        # Payment history modal
+└── views/
+    └── CreditCards.vue           # Updated with payment buttons
+```
+
+#### Features Implemented
+
+**Data Management:**
+- Full CRUD operations for payments
+- Automatic credit card balance updates
+- Database transactions ensure data consistency
+- Cascade delete support (payments deleted with credit card)
+
+**Validation:**
+- Server-side validation with Joi
+- Client-side validation for better UX
+- Payment amount cannot exceed current balance
+- Detailed error messages
+
+**UI/UX:**
+- Responsive modal design with TailwindCSS
+- Real-time balance calculations
+- Summary statistics in payment history
+- Confirmation dialog for destructive actions
+- Loading states for async operations
+- Error handling with user-friendly messages
+- Empty state with helpful call-to-action
+- Currency formatting throughout
+
+**Security:**
+- All endpoints require authentication
+- User ownership verification on all operations
+- Input sanitization via validation
+- SQL injection prevention via Prisma ORM
+- Database transactions for atomic operations
+
+#### Testing the Implementation
+
+**Manual Testing Steps:**
+1. Start backend: `cd backend && npm start`
+2. Start frontend: `cd frontend && npm run dev`
+3. Log in with test credentials
+4. Navigate to "Credit Cards" page
+5. Click "Pay" button on a credit card
+6. Fill in payment form and submit
+7. Verify balance updates immediately
+8. Click "History" button to view payment history
+9. Verify payment appears in history
+10. Delete a payment and verify balance is restored
+11. Check that summary statistics update correctly
+
+**Test Data (from seed):**
+- Chase Sapphire: $1,500 current / $3,200 total
+- Amex Platinum: $800 current / $2,100 total
+- Each card has sample payment history
+
+#### Transaction Safety
+
+**Database Transactions:**
+- Payment creation and balance update happen atomically
+- Payment deletion and balance restoration happen atomically
+- If any part fails, entire operation rolls back
+- Prevents data inconsistency
+
+#### Next Steps
+
+Ready to proceed to **Story 2.3: Bank Account Management**:
+- Create API endpoints for CRUD operations on bank accounts
+- Implement bank account model with fields: name, current_balance
+- Create BankAccountList.vue component
+- Create BankAccountForm.vue component
+- Display all bank accounts with balances
+- Implement validation
+- Add delete functionality with confirmation
+
+#### Notes
+
+- Payment amounts automatically reduce both current and total balance
+- Deleting a payment restores both balances
+- All monetary values displayed with 2 decimal places
+- Payments sorted by date (newest first) in history
+- Character counter for notes field
+- Payment form validates in real-time
+- Store includes helpful getters for summary calculations
+- Database transactions ensure data integrity
+- Payment history refreshes automatically when opened
+- Credit card balances refresh after payment operations
+
+---
+
 ## Story Status Summary
 
 | Epic | Story | Status | Completed Date |
@@ -732,7 +944,8 @@ Ready to proceed to **Story 2.2: Credit Card Payment Tracking**:
 | Epic 1 | Story 1.2: Database Setup | ✅ Complete | Nov 9, 2025 |
 | Epic 1 | Story 1.3: Authentication System | ✅ Complete | Nov 9, 2025 |
 | Epic 2 | Story 2.1: Credit Card Management | ✅ Complete | Nov 9, 2025 |
-| Epic 2 | Story 2.2: Credit Card Payment Tracking | 🔄 Next | - |
+| Epic 2 | Story 2.2: Credit Card Payment Tracking | ✅ Complete | Nov 9, 2025 |
+| Epic 2 | Story 2.3: Bank Account Management | 🔄 Next | - |
 
 ---
 

@@ -298,7 +298,21 @@
                     {{ card.totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                  <button
+                    @click="openPaymentForm(card)"
+                    class="text-green-600 hover:text-green-900 font-medium"
+                    title="Record Payment"
+                  >
+                    Pay
+                  </button>
+                  <button
+                    @click="openPaymentHistory(card)"
+                    class="text-blue-600 hover:text-blue-900"
+                    title="View Payment History"
+                  >
+                    History
+                  </button>
                   <button
                     @click="confirmDelete(card)"
                     class="text-red-600 hover:text-red-900"
@@ -420,6 +434,22 @@
         </div>
       </div>
     </div>
+
+    <!-- Payment Form Modal -->
+    <PaymentForm
+      :is-open="showPaymentForm"
+      :credit-card="selectedCard"
+      @close="closePaymentForm"
+      @payment-created="handlePaymentCreated"
+    />
+
+    <!-- Payment History Modal -->
+    <PaymentHistory
+      :is-open="showPaymentHistory"
+      :credit-card="selectedCard"
+      @close="closePaymentHistory"
+      @payment-deleted="handlePaymentDeleted"
+    />
   </div>
 </template>
 
@@ -427,11 +457,18 @@
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useCreditCardStore } from '../stores/creditCardStore.js';
 import { format } from 'date-fns';
+import PaymentForm from '../components/PaymentForm.vue';
+import PaymentHistory from '../components/PaymentHistory.vue';
 
 const creditCardStore = useCreditCardStore();
 
 const showDeleteConfirm = ref(false);
 const cardToDelete = ref(null);
+
+// Payment modals state
+const showPaymentForm = ref(false);
+const showPaymentHistory = ref(false);
+const selectedCard = ref(null);
 
 // Inline editing state
 const editingCard = ref(null);
@@ -631,6 +668,37 @@ const saveNewCard = async () => {
     console.error('Error creating credit card:', error);
     alert('Failed to create credit card');
   }
+};
+
+// Payment methods
+const openPaymentForm = (card) => {
+  selectedCard.value = card;
+  showPaymentForm.value = true;
+};
+
+const closePaymentForm = () => {
+  showPaymentForm.value = false;
+  selectedCard.value = null;
+};
+
+const handlePaymentCreated = async () => {
+  // Refresh credit cards to get updated balances
+  await creditCardStore.fetchCreditCards();
+};
+
+const openPaymentHistory = (card) => {
+  selectedCard.value = card;
+  showPaymentHistory.value = true;
+};
+
+const closePaymentHistory = () => {
+  showPaymentHistory.value = false;
+  selectedCard.value = null;
+};
+
+const handlePaymentDeleted = async () => {
+  // Refresh credit cards to get updated balances
+  await creditCardStore.fetchCreditCards();
 };
 
 // Lifecycle

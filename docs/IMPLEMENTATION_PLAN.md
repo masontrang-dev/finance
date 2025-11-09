@@ -113,22 +113,23 @@ A Vue.js and Node.js application for tracking credit cards, bank accounts, inves
 
 ---
 
-#### Story 2.2: Credit Card Payment Tracking
+#### Story 2.2: Credit Card Payment Tracking ✅
 **As a** user  
 **I want** to record payments on my credit cards  
 **So that** I can track my payment history
 
 **Acceptance Criteria:**
-- [ ] Create payment recording endpoint
-- [ ] Create payment history endpoint
-- [ ] Implement payment model with fields: amount, payment_date, notes
-- [ ] Update credit card balance after payment
-- [ ] Create PaymentForm.vue component
-- [ ] Create PaymentHistory.vue component
-- [ ] Display payment history in a table
-- [ ] Calculate remaining balance after payments
+- [x] Create payment recording endpoint
+- [x] Create payment history endpoint
+- [x] Implement payment model with fields: amount, payment_date, notes
+- [x] Update credit card balance after payment
+- [x] Create PaymentForm.vue component
+- [x] Create PaymentHistory.vue component
+- [x] Display payment history in a table
+- [x] Calculate remaining balance after payments
 
 **Estimated Effort:** 4-5 hours
+**Status:** Complete
 
 ---
 
