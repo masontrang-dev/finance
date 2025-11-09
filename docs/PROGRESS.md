@@ -936,6 +936,206 @@ Ready to proceed to **Story 2.3: Bank Account Management**:
 
 ---
 
+### ✅ Story 2.3: Bank Account Management
+
+**Status**: Completed  
+**Completed Date**: November 9, 2025  
+**Estimated Effort**: 4-5 hours  
+**Actual Effort**: ~4 hours
+
+#### Acceptance Criteria
+
+- [x] Create API endpoints for CRUD operations on bank accounts
+- [x] Implement bank account model with fields: name, current_balance
+- [x] Create BankAccountList.vue component
+- [x] Create BankAccountForm.vue component
+- [x] Display all bank accounts with balances
+- [x] Implement validation
+- [x] Add delete functionality with confirmation
+
+#### What Was Implemented
+
+**Backend API:**
+- **Validator** (`src/validators/bankAccountValidator.js`):
+  - Create bank account schema with Joi validation
+  - Update bank account schema for partial updates
+  - Balance cannot be negative validation
+  - Reusable validation middleware
+  - Detailed error messages for all fields
+
+- **Controller** (`src/controllers/bankAccountController.js`):
+  - `GET /api/bank-accounts` - Get all bank accounts for authenticated user
+  - `GET /api/bank-accounts/:id` - Get single bank account
+  - `POST /api/bank-accounts` - Create new bank account
+  - `PUT /api/bank-accounts/:id` - Update bank account
+  - `DELETE /api/bank-accounts/:id` - Delete bank account
+  - User ownership validation for all operations
+  - Proper error handling with appropriate status codes
+
+- **Routes** (`src/routes/bankAccountRoutes.js`):
+  - All routes protected with authentication middleware
+  - Validation middleware applied to create/update operations
+  - RESTful route structure
+
+- **Server Integration**:
+  - Bank account routes mounted at `/api/bank-accounts`
+  - Integrated with existing Express server
+
+**Frontend Components:**
+- **Service** (`src/services/bankAccountService.js`):
+  - API wrapper for all bank account operations
+  - Centralized HTTP calls using Axios
+
+- **Store** (`src/stores/bankAccountStore.js`):
+  - Pinia store for bank account state management
+  - State: bankAccounts array, currentBankAccount, loading, error
+  - Actions: fetchBankAccounts, fetchBankAccount, createBankAccount, updateBankAccount, deleteBankAccount
+  - Getters:
+    - totalBalance - Sum of all account balances
+    - accountsByName - Accounts sorted alphabetically
+    - accountsByBalance - Accounts sorted by balance (highest first)
+    - accountCount - Number of accounts
+
+- **BankAccounts View** (`src/views/BankAccounts.vue`):
+  - Clean, modern UI with TailwindCSS
+  - Navigation bar with links to Dashboard, Credit Cards, and Bank Accounts
+  - Summary cards showing:
+    - Total number of accounts
+    - Total balance across all accounts
+    - Average balance per account
+  - Bank account grid with:
+    - Account name and current balance
+    - Edit and delete buttons
+    - Sorted alphabetically by name
+  - Empty state with call-to-action
+  - Error message display
+  - Loading states
+  - Delete confirmation modal
+
+- **BankAccountForm Component** (`src/components/BankAccountForm.vue`):
+  - Modal form for creating/editing bank accounts
+  - Fields:
+    - Account name (text input)
+    - Current balance (currency input with $ prefix)
+  - Client-side validation:
+    - Required field validation
+    - Negative number prevention
+  - Server-side validation error display
+  - Loading states during submission
+  - Cancel button to close modal
+
+- **Router Integration**:
+  - Added `/bank-accounts` route with authentication requirement
+  - Lazy-loaded component for better performance
+
+- **Navigation Updates**:
+  - Updated Dashboard navigation bar with Bank Accounts link
+  - Updated CreditCards view with navigation bar
+  - Active state highlighting for current route
+  - Consistent navigation across all views
+
+#### Key Files Created
+
+**Backend:**
+```
+backend/src/
+├── validators/
+│   └── bankAccountValidator.js    # Input validation schemas
+├── controllers/
+│   └── bankAccountController.js   # CRUD operations
+├── routes/
+│   └── bankAccountRoutes.js       # Route definitions
+└── server.js                      # Updated with bank account routes
+```
+
+**Frontend:**
+```
+frontend/src/
+├── services/
+│   └── bankAccountService.js      # API service
+├── stores/
+│   └── bankAccountStore.js        # State management
+├── views/
+│   ├── BankAccounts.vue           # Main bank accounts page
+│   ├── Dashboard.vue              # Updated with navigation
+│   └── CreditCards.vue            # Updated with navigation
+├── components/
+│   └── BankAccountForm.vue        # Add/edit form modal
+└── router/
+    └── index.js                   # Updated with bank accounts route
+```
+
+#### Features Implemented
+
+**Data Management:**
+- Full CRUD operations for bank accounts
+- User-specific data isolation
+- Cascade delete support (via Prisma schema)
+
+**Validation:**
+- Server-side validation with Joi
+- Client-side validation for better UX
+- Balance cannot be negative
+- Detailed error messages
+
+**UI/UX:**
+- Responsive design with TailwindCSS
+- Summary statistics at the top
+- Confirmation dialog for destructive actions
+- Loading states for async operations
+- Error handling with user-friendly messages
+- Empty state with helpful call-to-action
+- Currency formatting throughout
+- Consistent navigation across all views
+
+**Security:**
+- All endpoints require authentication
+- User ownership verification on all operations
+- Input sanitization via validation
+- SQL injection prevention via Prisma ORM
+
+#### Testing the Implementation
+
+**Manual Testing Steps:**
+1. Start backend: `cd backend && npm start`
+2. Start frontend: `cd frontend && npm run dev`
+3. Log in with test credentials
+4. Navigate to "Bank Accounts" page from navigation
+5. View existing bank accounts from seed data
+6. Click "Add Bank Account" to create new account
+7. Fill in form and submit
+8. Edit an existing account
+9. Delete an account (with confirmation)
+10. Verify summary statistics update correctly
+11. Test navigation between Dashboard, Credit Cards, and Bank Accounts
+
+**Test Data (from seed):**
+- Chase Checking: $5,240.00
+- Ally Savings: $12,800.00
+
+#### Next Steps
+
+Ready to proceed to **Story 2.4: Future Deposits Tracking**:
+- Create deposit recording endpoint
+- Create deposit history endpoint
+- Implement deposit model with fields: amount, deposit_date, description
+- Create DepositForm.vue component
+- Create DepositList.vue component
+- Display upcoming deposits
+- Filter deposits by date range
+
+#### Notes
+
+- Bank account model already existed in Prisma schema
+- All monetary values displayed with 2 decimal places
+- Accounts sorted alphabetically by default
+- Delete operation is permanent (no soft delete)
+- Store includes helpful getters for summary calculations
+- Navigation is consistent across all views with active state highlighting
+- Form validates that balance cannot be negative before submission
+
+---
+
 ## Story Status Summary
 
 | Epic | Story | Status | Completed Date |
@@ -945,7 +1145,8 @@ Ready to proceed to **Story 2.3: Bank Account Management**:
 | Epic 1 | Story 1.3: Authentication System | ✅ Complete | Nov 9, 2025 |
 | Epic 2 | Story 2.1: Credit Card Management | ✅ Complete | Nov 9, 2025 |
 | Epic 2 | Story 2.2: Credit Card Payment Tracking | ✅ Complete | Nov 9, 2025 |
-| Epic 2 | Story 2.3: Bank Account Management | 🔄 Next | - |
+| Epic 2 | Story 2.3: Bank Account Management | ✅ Complete | Nov 9, 2025 |
+| Epic 2 | Story 2.4: Future Deposits Tracking | 🔄 Next | - |
 
 ---
 

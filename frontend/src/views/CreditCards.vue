@@ -1,5 +1,42 @@
 <template>
   <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex space-x-8">
+            <router-link
+              to="/"
+              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900"
+            >
+              Dashboard
+            </router-link>
+            <router-link
+              to="/credit-cards"
+              class="inline-flex items-center px-1 pt-1 border-b-2 border-blue-500 text-sm font-medium text-gray-900"
+            >
+              Credit Cards
+            </router-link>
+            <router-link
+              to="/bank-accounts"
+              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900"
+            >
+              Bank Accounts
+            </router-link>
+          </div>
+          <div class="flex items-center">
+            <span class="text-sm text-gray-700 mr-4">{{ authStore.currentUser?.name }}</span>
+            <button
+              @click="handleLogout"
+              class="text-sm text-gray-500 hover:text-gray-700"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
     <!-- Header -->
     <div class="bg-white shadow">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -455,12 +492,16 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 import { useCreditCardStore } from '../stores/creditCardStore.js';
+import { useAuthStore } from '../stores/authStore.js';
 import { format } from 'date-fns';
 import PaymentForm from '../components/PaymentForm.vue';
 import PaymentHistory from '../components/PaymentHistory.vue';
 
+const router = useRouter();
 const creditCardStore = useCreditCardStore();
+const authStore = useAuthStore();
 
 const showDeleteConfirm = ref(false);
 const cardToDelete = ref(null);
@@ -699,6 +740,11 @@ const closePaymentHistory = () => {
 const handlePaymentDeleted = async () => {
   // Refresh credit cards to get updated balances
   await creditCardStore.fetchCreditCards();
+};
+
+const handleLogout = async () => {
+  await authStore.logout();
+  router.push('/login');
 };
 
 // Lifecycle

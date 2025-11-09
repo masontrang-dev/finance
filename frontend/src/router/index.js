@@ -15,6 +15,12 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/bank-accounts',
+    name: 'BankAccounts',
+    component: () => import('../views/BankAccounts.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login.vue'),
