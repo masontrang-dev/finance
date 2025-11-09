@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
+import creditCardRoutes from './routes/creditCardRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -29,6 +30,9 @@ app.get('/api', (req, res) => {
 
 // Auth routes
 app.use('/api/auth', authRoutes);
+
+// Credit card routes
+app.use('/api/credit-cards', creditCardRoutes);
 
 // 404 handler
 app.use((req, res) => {

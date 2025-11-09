@@ -9,6 +9,12 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/credit-cards',
+    name: 'CreditCards',
+    component: () => import('../views/CreditCards.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login.vue'),

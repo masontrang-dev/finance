@@ -517,6 +517,213 @@ Ready to proceed to **Epic 2: Monthly Cashflow Tracker**:
 
 ---
 
+### ✅ Story 2.1: Credit Card Management
+
+**Status**: Completed  
+**Completed Date**: November 9, 2025  
+**Estimated Effort**: 6-8 hours  
+**Actual Effort**: ~6 hours
+
+#### Acceptance Criteria
+
+- [x] Create API endpoints for CRUD operations on credit cards
+- [x] Implement credit card model with fields: name, current_balance, total_balance, due_date
+- [x] Calculate future_due (total_balance - current_balance)
+- [x] Create CreditCardList.vue component
+- [x] Create CreditCardForm.vue component for add/edit
+- [x] Display all credit cards with balances and due dates
+- [x] Implement validation for required fields
+- [x] Add delete functionality with confirmation
+
+#### What Was Implemented
+
+**Backend API:**
+- **Validator** (`src/validators/creditCardValidator.js`):
+  - Create credit card schema with Joi validation
+  - Update credit card schema for partial updates
+  - Custom validation to ensure totalBalance >= currentBalance
+  - Reusable validation middleware
+  - Detailed error messages for all fields
+
+- **Controller** (`src/controllers/creditCardController.js`):
+  - `GET /api/credit-cards` - Get all credit cards for authenticated user
+  - `GET /api/credit-cards/:id` - Get single credit card
+  - `POST /api/credit-cards` - Create new credit card
+  - `PUT /api/credit-cards/:id` - Update credit card
+  - `DELETE /api/credit-cards/:id` - Delete credit card
+  - Automatic calculation of futureDue (totalBalance - currentBalance)
+  - User ownership validation for all operations
+  - Proper error handling with appropriate status codes
+
+- **Routes** (`src/routes/creditCardRoutes.js`):
+  - All routes protected with authentication middleware
+  - Validation middleware applied to create/update operations
+  - RESTful route structure
+
+- **Server Integration**:
+  - Credit card routes mounted at `/api/credit-cards`
+  - Integrated with existing Express server
+
+**Frontend Components:**
+- **Service** (`src/services/creditCardService.js`):
+  - API wrapper for all credit card operations
+  - Centralized HTTP calls using Axios
+
+- **Store** (`src/stores/creditCardStore.js`):
+  - Pinia store for credit card state management
+  - State: creditCards array, currentCard, loading, error
+  - Actions: fetchCreditCards, fetchCreditCard, createCreditCard, updateCreditCard, deleteCreditCard
+  - Getters:
+    - totalCurrentBalance - Sum of all current balances
+    - totalBalance - Sum of all total balances
+    - totalFutureDue - Sum of all future due amounts
+    - cardsByDueDate - Cards sorted by due date
+    - upcomingCards - Cards due within 7 days
+
+- **CreditCards View** (`src/views/CreditCards.vue`):
+  - Clean, modern UI with TailwindCSS
+  - Summary cards showing:
+    - Total current balance
+    - Total balance
+    - Total future due
+  - Credit card list with:
+    - Card name and balances
+    - Due date with "Due Soon" badge for upcoming payments
+    - Edit and delete buttons
+    - Sorted by due date (earliest first)
+  - Empty state with call-to-action
+  - Error message display
+  - Loading states
+  - Delete confirmation modal
+
+- **CreditCardForm Component** (`src/components/CreditCardForm.vue`):
+  - Modal form for creating/editing credit cards
+  - Fields:
+    - Card name (text input)
+    - Current balance (currency input with $ prefix)
+    - Total balance (currency input with $ prefix)
+    - Due date (date picker)
+  - Real-time calculation of future due amount
+  - Client-side validation:
+    - Required field validation
+    - Negative number prevention
+    - Total balance >= current balance validation
+  - Server-side validation error display
+  - Loading states during submission
+  - Cancel button to close modal
+
+- **Router Integration**:
+  - Added `/credit-cards` route with authentication requirement
+  - Lazy-loaded component for better performance
+
+- **Navigation**:
+  - Updated Dashboard navigation bar
+  - Added "Credit Cards" link to main navigation
+  - Active state highlighting for current route
+
+#### Key Files Created
+
+**Backend:**
+```
+backend/src/
+├── validators/
+│   └── creditCardValidator.js    # Input validation schemas
+├── controllers/
+│   └── creditCardController.js   # CRUD operations
+├── routes/
+│   └── creditCardRoutes.js       # Route definitions
+└── server.js                     # Updated with credit card routes
+```
+
+**Frontend:**
+```
+frontend/src/
+├── services/
+│   └── creditCardService.js      # API service
+├── stores/
+│   └── creditCardStore.js        # State management
+├── views/
+│   └── CreditCards.vue           # Main credit cards page
+├── components/
+│   └── CreditCardForm.vue        # Add/edit form modal
+├── router/
+│   └── index.js                  # Updated with credit cards route
+└── views/
+    └── Dashboard.vue             # Updated with navigation
+```
+
+#### Features Implemented
+
+**Data Management:**
+- Full CRUD operations for credit cards
+- Automatic future due calculation
+- User-specific data isolation
+- Cascade delete support (via Prisma schema)
+
+**Validation:**
+- Server-side validation with Joi
+- Client-side validation for better UX
+- Custom business rule: total balance must be >= current balance
+- Detailed error messages
+
+**UI/UX:**
+- Responsive design with TailwindCSS
+- Summary statistics at the top
+- Visual indicators for upcoming due dates
+- Confirmation dialog for destructive actions
+- Loading states for async operations
+- Error handling with user-friendly messages
+- Empty state with helpful call-to-action
+
+**Security:**
+- All endpoints require authentication
+- User ownership verification on all operations
+- Input sanitization via validation
+- SQL injection prevention via Prisma ORM
+
+#### Testing the Implementation
+
+**Manual Testing Steps:**
+1. Start backend: `cd backend && npm start`
+2. Start frontend: `cd frontend && npm run dev`
+3. Log in with test credentials
+4. Click "Credit Cards" in navigation
+5. View existing credit cards from seed data
+6. Click "Add Credit Card" to create new card
+7. Fill in form and submit
+8. Edit an existing card
+9. Delete a card (with confirmation)
+10. Verify summary statistics update correctly
+
+**Test Data (from seed):**
+- Chase Sapphire: $1,500 current / $3,200 total / Due Dec 15, 2024
+- Amex Platinum: $800 current / $2,100 total / Due Dec 20, 2024
+
+#### Next Steps
+
+Ready to proceed to **Story 2.2: Credit Card Payment Tracking**:
+- Create payment recording endpoint
+- Create payment history endpoint
+- Implement payment model with fields: amount, payment_date, notes
+- Update credit card balance after payment
+- Create PaymentForm.vue component
+- Create PaymentHistory.vue component
+- Display payment history in a table
+- Calculate remaining balance after payments
+
+#### Notes
+
+- Future due is calculated on-the-fly in the backend (not stored in DB)
+- Date handling uses date-fns for consistent formatting
+- All monetary values displayed with 2 decimal places
+- Credit cards sorted by due date by default
+- "Due Soon" badge appears for cards due within 7 days
+- Delete operation removes all associated payments (cascade delete via Prisma)
+- Form validates that total balance >= current balance before submission
+- Store includes helpful getters for summary calculations
+
+---
+
 ## Story Status Summary
 
 | Epic | Story | Status | Completed Date |
@@ -524,7 +731,8 @@ Ready to proceed to **Epic 2: Monthly Cashflow Tracker**:
 | Epic 1 | Story 1.1: Initialize Project Structure | ✅ Complete | Nov 9, 2025 |
 | Epic 1 | Story 1.2: Database Setup | ✅ Complete | Nov 9, 2025 |
 | Epic 1 | Story 1.3: Authentication System | ✅ Complete | Nov 9, 2025 |
-| Epic 2 | Story 2.1: Credit Card Management | 🔄 Next | - |
+| Epic 2 | Story 2.1: Credit Card Management | ✅ Complete | Nov 9, 2025 |
+| Epic 2 | Story 2.2: Credit Card Payment Tracking | 🔄 Next | - |
 
 ---
 

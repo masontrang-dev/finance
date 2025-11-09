@@ -93,22 +93,23 @@ A Vue.js and Node.js application for tracking credit cards, bank accounts, inves
 
 ### Epic 2: Monthly Cashflow Tracker
 
-#### Story 2.1: Credit Card Management
+#### Story 2.1: Credit Card Management ✅
 **As a** user  
 **I want** to manage my credit cards  
 **So that** I can track my credit card obligations
 
 **Acceptance Criteria:**
-- [ ] Create API endpoints for CRUD operations on credit cards
-- [ ] Implement credit card model with fields: name, current_balance, total_balance, due_date
-- [ ] Calculate future_due (total_balance - current_balance)
-- [ ] Create CreditCardList.vue component
-- [ ] Create CreditCardForm.vue component for add/edit
-- [ ] Display all credit cards with balances and due dates
-- [ ] Implement validation for required fields
-- [ ] Add delete functionality with confirmation
+- [x] Create API endpoints for CRUD operations on credit cards
+- [x] Implement credit card model with fields: name, current_balance, total_balance, due_date
+- [x] Calculate future_due (total_balance - current_balance)
+- [x] Create CreditCardList.vue component
+- [x] Create CreditCardForm.vue component for add/edit
+- [x] Display all credit cards with balances and due dates
+- [x] Implement validation for required fields
+- [x] Add delete functionality with confirmation
 
 **Estimated Effort:** 6-8 hours
+**Status:** Complete
 
 ---
 
