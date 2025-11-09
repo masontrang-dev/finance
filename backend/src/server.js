@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import authRoutes from './routes/authRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -21,10 +22,13 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Finance Tracker API is running' });
 });
 
-// API routes will be added here
+// API routes
 app.get('/api', (req, res) => {
   res.json({ message: 'Finance Tracker API v1' });
 });
+
+// Auth routes
+app.use('/api/auth', authRoutes);
 
 // 404 handler
 app.use((req, res) => {
